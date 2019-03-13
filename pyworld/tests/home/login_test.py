@@ -1,29 +1,30 @@
 __author__ = 'Ratnesh Mallah'
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from pages.home.login_page import LoginPage
 import unittest
+import pytest
 
 class LoginTest(unittest.TestCase):
 
+    baseUrl = "https://letskodeit.teachable.com/"
+    driver = webdriver.Chrome(executable_path="../../driver/chromedriver.exe")
+    driver.maximize_window()
+    driver.implicitly_wait(3)
+    driver.get(baseUrl)
+    lp = LoginPage(driver)
+
+    @pytest.mark.run(order=2)
     def test_validLogin(self):
-        baseUrl = "https://letskodeit.teachable.com/"
-        driver = webdriver.Chrome(executable_path="../../driver/chromedriver.exe")
-        driver.maximize_window()
-        driver.implicitly_wait(5)
-        driver.get(baseUrl)
+        self.lp.login("test@email.com","abcabc")
+        result = self.lp.verifuLoginSuccessfully()
+        assert result == True
 
-        lp = LoginPage(driver)
-        lp.login("test@email.com","abcabc")
+    @pytest.mark.run(order=1)
+    def test_InvalidLogin(self):
+        self.lp.login("testfail@email.com","abcabc")
+        result = self.lp.verifyInvalidLogin()
+        assert result == True
 
-        try:
-            userIcon = driver.find_element(By.XPATH,"//span[text()='Test User']")
-            if userIcon is not None:
-                print("Login Successful!")
-            else:
-                print("Login failed!")
-        except:
-            print("Login failed!")
-
-
+    def __del__(self):
+        self.driver.close()

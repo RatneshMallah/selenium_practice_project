@@ -53,13 +53,13 @@ class SeleniumDriver:
         try:
             element = self.getElement(locator,locatorType)
             if element is not None:
-                self.log.info(element+ " is present with locator "+locator+" and locatorType "+locatorType)
+                self.log.info("Element is present with locator "+locator+" and locatorType "+locatorType)
                 return True
             else:
-                self.log.error(element+ " is not present with locator "+locator+" and locatorType "+locatorType)
+                self.log.error("Element is not present with locator "+locator+" and locatorType "+locatorType)
                 return False
         except:
-            self.log.error(element+ " is not present with locator "+locator+" and locatorType "+locatorType)
+            self.log.error("Element is not present with locator "+locator+" and locatorType "+locatorType)
             return False
 
 
@@ -85,9 +85,11 @@ class SeleniumDriver:
             self.log.error("Cannot send data into the element with locator: "+locator+" locatorType : "+locatortype)
 
 
+
     def sendKeys(self,data,locator, locatortype="id"):
          try:
             element = self.getElement(locator,locatortype)
+            element.clear()
             element.send_keys(data)
             self.log.info("keys sent to element with locator: "+locator+" locatorType : "+locatortype)
          except:
